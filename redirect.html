@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>redirect</title>
+    <script
+      defer
+      src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script>
+      function data() {
+        return {
+          token: "",
+          linkGoogle() {
+            return `http://localhost:8000/login/google/callback?token=${this.token}`;
+          },
+          linkFacebook() {
+            return `http://localhost:8000/login/facebook/callback?token=${this.token}`;
+          },
+          init() {
+            var params = this.getQueryParams(document.location.search);
+            if (params.token) this.token = params.token;
+          },
+          getQueryParams(qs) {
+            qs = qs.split("+").join(" ");
+
+            var params = {},
+              tokens,
+              re = /[?&]?([^=]+)=([^&]*)/g;
+
+            while ((tokens = re.exec(qs))) {
+              params[decodeURIComponent(tokens[1])] = decodeURIComponent(
+                tokens[2]
+              );
+            }
+
+            return params;
+          },
+        };
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Redirect util</h1>
+    <div x-data="data()">
+      <ul>
+        <li><a :href="linkGoogle">Google</a></li>
+        <li><a :href="linkFacebook">Facebook</a></li>
+      </ul>
+    </div>
+  </body>
+</html>
