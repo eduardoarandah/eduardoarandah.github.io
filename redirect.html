@@ -1,53 +1,28 @@
-<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <title>redirect</title>
-    <script
-      defer
-      src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
-    ></script>
-    <script>
-      function data() {
-        return {
-          token: "",
-          linkGoogle() {
-            return `http://localhost:8000/login/google/callback?token=${this.token}`;
-          },
-          linkFacebook() {
-            return `http://localhost:8000/login/facebook/callback?token=${this.token}`;
-          },
-          init() {
-            var params = this.getQueryParams(document.location.search);
-            if (params.token) this.token = params.token;
-          },
-          getQueryParams(qs) {
-            qs = qs.split("+").join(" ");
-
-            var params = {},
-              tokens,
-              re = /[?&]?([^=]+)=([^&]*)/g;
-
-            while ((tokens = re.exec(qs))) {
-              params[decodeURIComponent(tokens[1])] = decodeURIComponent(
-                tokens[2]
-              );
-            }
-
-            return params;
-          },
-        };
-      }
-    </script>
   </head>
-  <body>
+
+  <body cz-shortcut-listen="true">
     <h1>Redirect util</h1>
-    <div x-data="data()">
+    <div>
       <ul>
-        <li><a :href="linkGoogle">Google</a></li>
-        <li><a :href="linkFacebook">Facebook</a></li>
+        <li>
+          <a id="google" href="/">Google</a>
+        </li>
+        <li>
+          <a id="facebook" href="/">Facebook</a>
+        </li>
       </ul>
     </div>
+    <script>
+      const base = "http://127.0.0.1:8000/oauth/callback";
+      const query = window.location.search;
+
+      document.getElementById("google").href = `${base}/google${query}`;
+      document.getElementById("facebook").href = `${base}/facebook${query}`;
+    </script>
   </body>
 </html>
